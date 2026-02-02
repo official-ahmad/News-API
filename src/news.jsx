@@ -3,32 +3,37 @@ import Card from "./Card";
 import "./news.css";
 import { IoSearchOutline } from "react-icons/io5";
 
-const url =
-  "https://newsapi.org/v2/everything?q=bitcoin&apiKey=1d9e1fa7b825410faa1975e4bd96bd3c";
+// AB YE LINK AAPKE BACKEND KA HAI
+// Localhost par check karne ke liye: http://localhost:5000/api/articles/live
+// Jab live deploy karenge to localhost ki jagah live URL aa jayega
+const backendUrl = "http://localhost:5000/api/articles/live-news";
 
 function News() {
   const [query, setQuery] = useState("");
-
   const [news, setNews] = useState([]);
 
   async function fetchNews() {
     try {
-      const res = await fetch(url);
+      // Direct NewsAPI ki jagah apne backend ko call kar rahay hain
+      const res = await fetch(backendUrl);
       const data = await res.json();
 
-      const filteredArticles = data.articles.filter(
-        (article) => article.urlToImage && article.urlToImage.trim() !== ""
-      );
-
-      setNews(filteredArticles);
+      if (data.success && data.articles) {
+        // Sirf wo articles filter kar rahay hain jin ki image mojood ho
+        const filteredArticles = data.articles.filter(
+          (article) => article.urlToImage && article.urlToImage.trim() !== "",
+        );
+        setNews(filteredArticles);
+      }
     } catch (error) {
-      console.error("Error fetching news:", error);
+      console.error("Error fetching news from backend:", error);
     }
   }
 
   useEffect(() => {
     fetchNews();
   }, []);
+
   function changeHandler(e) {
     setQuery(e.target.value);
   }
@@ -50,8 +55,7 @@ function News() {
       <div className="news">
         {news
           .filter((meriNews) => {
-            // return meriNews.title.toLowerCase().startsWith(query);
-            return meriNews.title.toLowerCase().includes(query);
+            return meriNews.title.toLowerCase().includes(query.toLowerCase());
           })
           .map((meriNews, index) => (
             <Card key={index} {...meriNews} />
