@@ -6,7 +6,8 @@ import { IoSearchOutline } from "react-icons/io5";
 // AB YE LINK AAPKE BACKEND KA HAI
 // Localhost par check karne ke liye: http://localhost:5000/api/articles/live
 // Jab live deploy karenge to localhost ki jagah live URL aa jayega
-const backendUrl = "http://localhost:5000/api/articles/live-news";
+const backendUrl =
+  "https://news-server-tkfj.onrender.com/api/articles/live-news";
 
 function News() {
   const [query, setQuery] = useState("");
